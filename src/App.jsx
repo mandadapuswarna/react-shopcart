@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles.css';
 import useDebounce from './hooks/useDebounce';
+import useLocalStorage from './hooks/useLocalStorage';
 import CartPage from './pages/CartPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import ProductsPage from './pages/ProductsPage';
@@ -9,7 +10,7 @@ import { getProducts } from './services/productService';
 
 export default function App() {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useLocalStorage('shopcart', []);
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Products');
   const [sortBy, setSortBy] = useState('default');
