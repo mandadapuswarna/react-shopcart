@@ -4,6 +4,7 @@ import CategoryFilter from './components/CategoryFilter';
 import Header from './components/Header';
 import Loader from './components/Loader';
 import ProductGrid from './components/ProductGrid';
+import SortSelect from './components/SortSelect';
 import useDebounce from './hooks/useDebounce';
 import { getProducts } from './services/productService';
 
@@ -12,6 +13,7 @@ export default function App() {
   const [cart, setCart] = useState([]);
   const [query, setQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Products');
+  const [sortBy, setSortBy] = useState('default');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -44,7 +46,7 @@ export default function App() {
   const visibleProducts = useMemo(() => {
     const normalizedQuery = debouncedQuery.trim().toLowerCase();
 
-    return products.filter(product => {
+    const filteredProducts = products.filter(product => {
       const matchesCategory =
         selectedCategory === 'All Products' || product.category === selectedCategory;
 
@@ -53,7 +55,20 @@ export default function App() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [products, selectedCategory, debouncedQuery]);
+
+    switch (sortBy) {
+      case 'price-asc':
+        return [...filteredProducts].sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return [...filteredProducts].sort((a, b) => b.price - a.price);
+      case 'name-asc':
+        return [...filteredProducts].sort((a, b) => a.title.localeCompare(b.title));
+      case 'name-desc':
+        return [...filteredProducts].sort((a, b) => b.title.localeCompare(a.title));
+      default:
+        return filteredProducts;
+    }
+  }, [products, selectedCategory, debouncedQuery, sortBy]);
 
   const addToCart = product => {
     setCart(currentCart => [...currentCart, product]);
@@ -79,11 +94,18 @@ export default function App() {
 
         {!loading && !error && (
           <div className="toolbar">
-            <CategoryFilter
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-            />
+            <div className="toolbar-row">
+              <CategoryFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+              />
+
+              <SortSelect
+                value={sortBy}
+                onChange={event => setSortBy(event.target.value)}
+              />
+            </div>
 
             {query && (
               <p className="search-summary">
