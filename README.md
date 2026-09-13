@@ -21,6 +21,7 @@ The app currently includes:
 - Product listing
 - Basic search
 - Add to cart
+- Dedicated cart page with quantity controls
 - Cart count
 - Loading state while products are being fetched
 - Error handling with retry option
@@ -104,6 +105,6 @@ This creates the optimized files in the `dist` folder.
 
 - The app fetches demo product data from the FakeStore API.
 - Search is case-insensitive and matches the product title.
-- The cart currently tracks items by count and total price in a simple summary format.
+- The cart tracks item quantities and shows a dedicated cart page with subtotal, free shipping, and totals.
 - Loading, error, and empty states are handled gracefully to improve the user experience.
 

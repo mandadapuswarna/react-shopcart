@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles.css';
 import useDebounce from './hooks/useDebounce';
+import CartPage from './pages/CartPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import ProductsPage from './pages/ProductsPage';
 import { getProducts } from './services/productService';
@@ -69,10 +70,38 @@ export default function App() {
   }, [products, selectedCategory, debouncedQuery, sortBy]);
 
   const addToCart = product => {
-    setCart(currentCart => [...currentCart, product]);
+    setCart(currentCart => {
+      const existingItem = currentCart.find(item => item.id === product.id);
+
+      if (existingItem) {
+        return currentCart.map(item =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+
+      return [...currentCart, { ...product, quantity: 1 }];
+    });
   };
 
-  const total = cart.reduce((sum, product) => sum + product.price, 0);
+  const updateQuantity = (productId, change) => {
+    setCart(currentCart =>
+      currentCart.flatMap(item => {
+        if (item.id !== productId) {
+          return [item];
+        }
+
+        const nextQuantity = item.quantity + change;
+        return nextQuantity > 0 ? [{ ...item, quantity: nextQuantity }] : [];
+      })
+    );
+  };
+
+  const removeFromCart = productId => {
+    setCart(currentCart => currentCart.filter(item => item.id !== productId));
+  };
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <BrowserRouter>
@@ -84,7 +113,8 @@ export default function App() {
               products={products}
               query={query}
               setQuery={setQuery}
-              cartCount={cart.length}
+              cartCount={cartCount}
+              cartTotal={subtotal}
               loading={loading}
               error={error}
               fetchProducts={fetchProducts}
@@ -101,6 +131,19 @@ export default function App() {
         <Route
           path="/products/:id"
           element={<ProductDetailsPage products={products} onAddToCart={addToCart} />}
+        />
+        <Route
+          path="/cart"
+          element={
+            <CartPage
+              cart={cart}
+              cartCount={cartCount}
+              subtotal={subtotal}
+              onIncrease={productId => updateQuantity(productId, 1)}
+              onDecrease={productId => updateQuantity(productId, -1)}
+              onRemove={removeFromCart}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>

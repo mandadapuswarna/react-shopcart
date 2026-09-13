@@ -19,6 +19,7 @@ export default function ProductsPage({
   categories,
   sortBy,
   setSortBy,
+  cartTotal,
 }) {
   const shouldShowNoResults = !loading && !error && visibleProducts.length === 0 && query.trim().length > 0;
 
@@ -92,7 +93,7 @@ export default function ProductsPage({
         <section className="cart">
           <h2>Order summary</h2>
           <p>
-            {cartCount} item(s) · Total <b>${products.reduce((sum, product) => sum + product.price, 0).toFixed(2)}</b>
+            {cartCount} item(s) · Total <b>${cartTotal.toFixed(2)}</b>
           </p>
         </section>
       </main>
