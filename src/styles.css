@@ -103,6 +103,41 @@ main {
   background: #f3f4f6;
 }
 
+.status-box {
+  margin: 24px 0;
+  padding: 32px 20px;
+  border-radius: 12px;
+  text-align: center;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.status-box p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.error-state {
+  background: #fff5f5;
+  border-color: #fecaca;
+}
+
+.empty-state {
+  background: #f3f4f6;
+}
+
+.retry-button {
+  margin-top: 18px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 @media (max-width: 850px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);

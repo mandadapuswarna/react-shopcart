@@ -10,19 +10,24 @@ export default function App() {
   const [cart, setCart] = useState([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(false);
+
+    try {
+      const data = await getProducts();
+      setProducts(data || []);
+    } catch (fetchError) {
+      setError(true);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch (error) {
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProducts();
   }, []);
 
@@ -60,6 +65,22 @@ export default function App() {
 
         {loading ? (
           <Loader />
+        ) : error ? (
+          <div className="status-box error-state">
+            <p>
+              Unable to load products.
+              <br />
+              <br />
+              Please try again.
+            </p>
+            <button className="retry-button" onClick={fetchProducts}>
+              Retry
+            </button>
+          </div>
+        ) : visibleProducts.length === 0 ? (
+          <div className="status-box empty-state">
+            <p>No products found.</p>
+          </div>
         ) : (
           <ProductGrid
             products={visibleProducts}
