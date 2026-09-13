@@ -24,12 +24,29 @@ nav h2 {
   margin: 0;
 }
 
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
 nav input {
   width: 360px;
   max-width: 45%;
   padding: 11px;
   border: 1px solid #ddd;
   border-radius: 8px;
+}
+
+.clear-search-button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 main {
@@ -116,6 +133,12 @@ main {
   margin: 0;
   font-size: 18px;
   line-height: 1.6;
+}
+
+.search-summary {
+  margin: 0 0 18px;
+  font-size: 16px;
+  color: #374151;
 }
 
 .error-state {

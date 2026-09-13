@@ -3,6 +3,7 @@ import './styles.css';
 import Header from './components/Header';
 import Loader from './components/Loader';
 import ProductGrid from './components/ProductGrid';
+import useDebounce from './hooks/useDebounce';
 import { getProducts } from './services/productService';
 
 export default function App() {
@@ -11,6 +12,8 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  const debouncedQuery = useDebounce(query, 400);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -32,7 +35,7 @@ export default function App() {
   }, []);
 
   const visibleProducts = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = debouncedQuery.trim().toLowerCase();
 
     if (!normalizedQuery) {
       return products;
@@ -41,13 +44,14 @@ export default function App() {
     return products.filter(product =>
       product.title.toLowerCase().includes(normalizedQuery)
     );
-  }, [products, query]);
+  }, [products, debouncedQuery]);
 
   const addToCart = product => {
     setCart(currentCart => [...currentCart, product]);
   };
 
   const total = cart.reduce((sum, product) => sum + product.price, 0);
+  const shouldShowNoResults = !loading && !error && visibleProducts.length === 0 && debouncedQuery.trim().length > 0;
 
   return (
     <div>
@@ -55,6 +59,7 @@ export default function App() {
         query={query}
         onSearchChange={event => setQuery(event.target.value)}
         cartCount={cart.length}
+        onClearSearch={() => setQuery('')}
       />
 
       <main>
@@ -62,6 +67,12 @@ export default function App() {
           <h1>Simple shopping. Beautiful experience.</h1>
           <p>A React demo with API data, search and cart state.</p>
         </section>
+
+        {query && !loading && !error && (
+          <p className="search-summary">
+            Search results: {visibleProducts.length} product{visibleProducts.length === 1 ? '' : 's'}
+          </p>
+        )}
 
         {loading ? (
           <Loader />
@@ -77,9 +88,13 @@ export default function App() {
               Retry
             </button>
           </div>
-        ) : visibleProducts.length === 0 ? (
+        ) : shouldShowNoResults ? (
           <div className="status-box empty-state">
-            <p>No products found.</p>
+            <p>
+              No products found for:
+              <br />
+              <strong>"{debouncedQuery}"</strong>
+            </p>
           </div>
         ) : (
           <ProductGrid
