@@ -135,8 +135,35 @@ main {
   line-height: 1.6;
 }
 
+.toolbar {
+  margin-bottom: 18px;
+}
+
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.category-button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.category-button.active {
+  background: #111827;
+  border-color: #111827;
+  color: #fff;
+}
+
 .search-summary {
-  margin: 0 0 18px;
+  margin: 0;
   font-size: 16px;
   color: #374151;
 }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import './styles.css';
+import CategoryFilter from './components/CategoryFilter';
 import Header from './components/Header';
 import Loader from './components/Loader';
 import ProductGrid from './components/ProductGrid';
@@ -10,6 +11,7 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [query, setQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All Products');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -34,17 +36,24 @@ export default function App() {
     fetchProducts();
   }, []);
 
+  const categories = useMemo(() => {
+    const uniqueCategories = [...new Set(products.map(product => product.category))];
+    return ['All Products', ...uniqueCategories];
+  }, [products]);
+
   const visibleProducts = useMemo(() => {
     const normalizedQuery = debouncedQuery.trim().toLowerCase();
 
-    if (!normalizedQuery) {
-      return products;
-    }
+    return products.filter(product => {
+      const matchesCategory =
+        selectedCategory === 'All Products' || product.category === selectedCategory;
 
-    return products.filter(product =>
-      product.title.toLowerCase().includes(normalizedQuery)
-    );
-  }, [products, debouncedQuery]);
+      const matchesSearch =
+        !normalizedQuery || product.title.toLowerCase().includes(normalizedQuery);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [products, selectedCategory, debouncedQuery]);
 
   const addToCart = product => {
     setCart(currentCart => [...currentCart, product]);
@@ -68,10 +77,20 @@ export default function App() {
           <p>A React demo with API data, search and cart state.</p>
         </section>
 
-        {query && !loading && !error && (
-          <p className="search-summary">
-            Search results: {visibleProducts.length} product{visibleProducts.length === 1 ? '' : 's'}
-          </p>
+        {!loading && !error && (
+          <div className="toolbar">
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+            />
+
+            {query && (
+              <p className="search-summary">
+                Search results: {visibleProducts.length} product{visibleProducts.length === 1 ? '' : 's'}
+              </p>
+            )}
+          </div>
         )}
 
         {loading ? (
