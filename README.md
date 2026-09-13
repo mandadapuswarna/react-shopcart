@@ -23,6 +23,7 @@ The app currently includes:
 - Add to cart
 - Dedicated cart page with quantity controls
 - Cart persistence with local storage
+- Checkout form with order summary and validation
 - Cart count
 - Loading state while products are being fetched
 - Error handling with retry option
@@ -108,5 +109,6 @@ This creates the optimized files in the `dist` folder.
 - Search is case-insensitive and matches the product title.
 - The cart tracks item quantities and shows a dedicated cart page with subtotal, free shipping, and totals.
 - Cart items and quantities remain available after refreshing the browser.
+- Checkout validates required fields and email format, then clears the cart after a successful submission.
 - Loading, error, and empty states are handled gracefully to improve the user experience.
 

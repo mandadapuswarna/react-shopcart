@@ -88,6 +88,10 @@ export default function CartPage({ cart, cartCount, subtotal, onIncrease, onDecr
             <span>Total</span>
             <strong>${total.toFixed(2)}</strong>
           </div>
+
+          <Link to="/checkout" className="checkout-link">
+            <button className="primary-button">Proceed to Checkout</button>
+          </Link>
         </aside>
       </div>
     </main>

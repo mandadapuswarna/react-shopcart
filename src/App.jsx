@@ -4,6 +4,7 @@ import './styles.css';
 import useDebounce from './hooks/useDebounce';
 import useLocalStorage from './hooks/useLocalStorage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import ProductsPage from './pages/ProductsPage';
 import { getProducts } from './services/productService';
@@ -143,6 +144,17 @@ export default function App() {
               onIncrease={productId => updateQuantity(productId, 1)}
               onDecrease={productId => updateQuantity(productId, -1)}
               onRemove={removeFromCart}
+            />
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <CheckoutPage
+              cart={cart}
+              cartCount={cartCount}
+              total={subtotal}
+              onClearCart={() => setCart([])}
             />
           }
         />
