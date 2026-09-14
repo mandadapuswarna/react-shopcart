@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles.css';
+import ScrollToTop from './components/ScrollToTop';
+import Toast from './components/Toast';
 import useDebounce from './hooks/useDebounce';
 import useLocalStorage from './hooks/useLocalStorage';
 import CartPage from './pages/CartPage';
@@ -17,6 +19,7 @@ export default function App() {
   const [sortBy, setSortBy] = useState('default');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
   const debouncedQuery = useDebounce(query, 400);
 
@@ -30,6 +33,7 @@ export default function App() {
     } catch (fetchError) {
       setError(true);
       setProducts([]);
+      showToast('Unable to load products', 'error');
     } finally {
       setLoading(false);
     }
@@ -38,6 +42,32 @@ export default function App() {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const showToast = (message, type = 'success') => {
+    setToasts(currentToasts => {
+      if (currentToasts.some(toast => toast.message === message && toast.type === type)) {
+        return currentToasts;
+      }
+
+      return [...currentToasts, { id: Date.now(), message, type }];
+    });
+  };
+
+  const dismissToast = toastId => {
+    setToasts(currentToasts => currentToasts.filter(toast => toast.id !== toastId));
+  };
+
+  useEffect(() => {
+    if (toasts.length === 0) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setToasts(currentToasts => currentToasts.slice(1));
+    }, 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [toasts]);
 
   const categories = useMemo(() => {
     const uniqueCategories = [...new Set(products.map(product => product.category))];
@@ -72,6 +102,7 @@ export default function App() {
   }, [products, selectedCategory, debouncedQuery, sortBy]);
 
   const addToCart = product => {
+    showToast('Product added to cart');
     setCart(currentCart => {
       const existingItem = currentCart.find(item => item.id === product.id);
 
@@ -86,6 +117,12 @@ export default function App() {
   };
 
   const updateQuantity = (productId, change) => {
+    const item = cart.find(cartItem => cartItem.id === productId);
+
+    if (item && change < 0 && item.quantity + change <= 0) {
+      showToast('Product removed from cart', 'warning');
+    }
+
     setCart(currentCart =>
       currentCart.flatMap(item => {
         if (item.id !== productId) {
@@ -99,6 +136,7 @@ export default function App() {
   };
 
   const removeFromCart = productId => {
+    showToast('Product removed from cart', 'warning');
     setCart(currentCart => currentCart.filter(item => item.id !== productId));
   };
 
@@ -107,6 +145,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"
@@ -127,6 +166,7 @@ export default function App() {
               categories={categories}
               sortBy={sortBy}
               setSortBy={setSortBy}
+              totalProducts={products.length}
             />
           }
         />
@@ -163,11 +203,24 @@ export default function App() {
               cart={cart}
               cartCount={cartCount}
               total={subtotal}
-              onClearCart={() => setCart([])}
+              onClearCart={() => {
+                setCart([]);
+                showToast('Order placed successfully');
+              }}
             />
           }
         />
       </Routes>
+      <div className="toast-container" aria-live="polite">
+        {toasts.map(toast => (
+          <Toast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onDismiss={() => dismissToast(toast.id)}
+          />
+        ))}
+      </div>
     </BrowserRouter>
   );
 }

@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
+import { useState } from 'react';
 
 export default function ProductDetailsPage({
   products,
@@ -9,6 +10,7 @@ export default function ProductDetailsPage({
   cartCount,
   onClearSearch,
 }) {
+  const [added, setAdded] = useState(false);
   const { id } = useParams();
   const product = products.find(item => item.id === Number(id));
 
@@ -52,8 +54,15 @@ export default function ProductDetailsPage({
             </p>
             <p className="detail-description">{product.description}</p>
 
-            <button className="primary-button" onClick={() => onAddToCart(product)}>
-              Add to Cart
+            <button
+              className="primary-button"
+              onClick={() => {
+                onAddToCart(product);
+                setAdded(true);
+                window.setTimeout(() => setAdded(false), 2000);
+              }}
+            >
+              {added ? '✓ Added' : 'Add to Cart'}
             </button>
           </div>
         </div>

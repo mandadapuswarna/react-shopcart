@@ -20,6 +20,7 @@ export default function ProductsPage({
   sortBy,
   setSortBy,
   cartTotal,
+  totalProducts,
 }) {
   const shouldShowNoResults = !loading && !error && visibleProducts.length === 0 && query.trim().length > 0;
 
@@ -53,11 +54,10 @@ export default function ProductsPage({
               />
             </div>
 
-            {query && (
-              <p className="search-summary">
-                Search results: {visibleProducts.length} product{visibleProducts.length === 1 ? '' : 's'}
-              </p>
-            )}
+            <p className="search-summary">
+              Showing {visibleProducts.length} of {totalProducts} products
+              {query && ` · Search results: ${visibleProducts.length}`}
+            </p>
           </div>
         )}
 

@@ -25,6 +25,9 @@ The app currently includes:
 - Cart persistence with local storage
 - Checkout form with order summary and validation
 - Responsive layouts for mobile, tablet, and desktop screens
+- Toast notifications for cart and order actions
+- Temporary add-to-cart button feedback
+- Visible product count and scroll-to-top navigation
 - Cart count
 - Loading state while products are being fetched
 - Error handling with retry option
@@ -112,5 +115,6 @@ This creates the optimized files in the `dist` folder.
 - Cart items and quantities remain available after refreshing the browser.
 - Checkout validates required fields and email format, then clears the cart after a successful submission.
 - The layout uses one product column on small mobile screens, three columns on tablet screens, and four columns on desktop screens.
+- Important cart and order actions display dismissible notifications that disappear automatically.
 - Loading, error, and empty states are handled gracefully to improve the user experience.
 
