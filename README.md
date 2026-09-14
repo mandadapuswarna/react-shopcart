@@ -8,7 +8,7 @@ The project demonstrates practical React concepts including API integration, reu
 
 ## Live Demo
 
-Coming soon.
+🔗 **[View ShopCart Live Demo](https://shopcartswarna.netlify.app/)**
 
 ---
 
