@@ -132,7 +132,16 @@ export default function App() {
         />
         <Route
           path="/products/:id"
-          element={<ProductDetailsPage products={products} onAddToCart={addToCart} />}
+          element={
+            <ProductDetailsPage
+              products={products}
+              onAddToCart={addToCart}
+              query={query}
+              onSearchChange={event => setQuery(event.target.value)}
+              cartCount={cartCount}
+              onClearSearch={() => setQuery('')}
+            />
+          }
         />
         <Route
           path="/cart"
