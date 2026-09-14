@@ -5,7 +5,6 @@ import SortSelect from '../components/SortSelect';
 import Loader from '../components/Loader';
 
 export default function ProductsPage({
-  products,
   query,
   setQuery,
   cartCount,

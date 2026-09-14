@@ -30,7 +30,7 @@ export default function App() {
     try {
       const data = await getProducts();
       setProducts(data || []);
-    } catch (fetchError) {
+    } catch {
       setError(true);
       setProducts([]);
       showToast('Unable to load products', 'error');
@@ -151,7 +151,6 @@ export default function App() {
           path="/"
           element={
             <ProductsPage
-              products={products}
               query={query}
               setQuery={setQuery}
               cartCount={cartCount}

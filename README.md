@@ -55,10 +55,22 @@ Shopcart/
 │   ├── styles.css
 │   ├── components/
 │   │   ├── Header/
+│   │   ├── CategoryFilter/
+│   │   ├── Loader/
 │   │   ├── ProductCard/
 │   │   ├── ProductGrid/
 │   │   ├── SearchBar/
-│   │   └── Loader/
+│   │   ├── ScrollToTop.jsx
+│   │   ├── SortSelect/
+│   │   └── Toast/
+│   ├── hooks/
+│   │   ├── useDebounce.js
+│   │   └── useLocalStorage.js
+│   ├── pages/
+│   │   ├── CartPage.jsx
+│   │   ├── CheckoutPage.jsx
+│   │   ├── ProductDetailsPage.jsx
+│   │   └── ProductsPage.jsx
 │   ├── services/
 │   │   └── productService.js
 │   └── utils/

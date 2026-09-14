@@ -8,6 +8,12 @@ body {
   color: #1f2937;
 }
 
+button,
+input,
+select {
+  font: inherit;
+}
+
 nav {
   position: sticky;
   top: 0;
@@ -59,6 +65,11 @@ nav input {
   cursor: pointer;
 }
 
+.clear-search-button:hover,
+.remove-button:hover {
+  background: #f9fafb;
+}
+
 main {
   width: min(1150px, 90%);
   margin: auto;
@@ -106,6 +117,7 @@ main {
   line-height: 1.4;
   flex: 1;
   margin: 0 0 12px;
+  overflow-wrap: anywhere;
 }
 
 .price {
@@ -121,6 +133,11 @@ main {
   padding: 11px;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.card button:hover,
+.primary-button:hover {
+  background: #374151;
 }
 
 .cart {
@@ -178,6 +195,10 @@ main {
   background: #111827;
   border-color: #111827;
   color: #fff;
+}
+
+.category-button:hover:not(.active) {
+  background: #f3f4f6;
 }
 
 .product-link,
@@ -366,6 +387,10 @@ main {
   color: #111827;
 }
 
+.quantity-button:hover {
+  background: #e5e7eb;
+}
+
 .quantity-control span {
   min-width: 48px;
   text-align: center;
@@ -510,6 +535,14 @@ main {
 .empty-cart-state h1 {
   margin: 0 0 18px;
   font-size: 32px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
 }
 
 .page-shell {
